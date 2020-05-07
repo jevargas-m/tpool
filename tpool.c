@@ -1,5 +1,5 @@
 /* Threadpool implementation
- * Author: Enrique Vargas (jevargas@seas.upenn.edu)
+ * Author: jevargas-m
  * implement functions in tpool.h
  * 
  * Follows condition variable design pattern described in:

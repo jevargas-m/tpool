@@ -1,5 +1,5 @@
 /* Threadpool implementation
- * Author: Enrique Vargas (jevargas@seas.upenn.edu)
+ * Author: jevargas-m
  *
  * Usage:
  *      int create_threadpool(int num_threads)
