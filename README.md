@@ -35,6 +35,9 @@ To build run:
 make all
 ```
 
+## Key concepts
+The library and example illustrate the following key concepts: signal handling, thread, condition variables, mutex, spin lock, linkedlist, dynamic memory allocation and freeing.
+
 
 
 
