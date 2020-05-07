@@ -135,6 +135,7 @@ int destroy_thredpool()
         while (n_work != NULL) {
                 tmp_work = n_work;
                 n_work = n_work->next;
+                free(tmp_work->arg);
                 free(tmp_work);
         }
         work_head = NULL;  /* ensure threads don't work while destroying */
