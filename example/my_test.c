@@ -6,7 +6,6 @@
  * Must show interleaving work executed concurrently:
  * 
  * Note:
- *      0) Error check is omited for sys-calls and threadpool.
  *      1) Work is started for NUM_THREADS and happens concurrently
  *      2) NUM_WORK_FUNCTIONS are enqueued at the beginning even with
  *         threads working concurrently.
@@ -47,6 +46,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <assert.h>
 #include "../tpool.h"
 
 #define NUM_THREADS 3
@@ -83,13 +83,25 @@ int main()
 {
         int i;
 
-        signal(SIGINT, sigint_handler); /* destroy threadpool on CTRL + C */
-        create_threadpool(NUM_THREADS); 
+        /* destroy threadpool on CTRL + C */
+        if (signal(SIGINT, sigint_handler) == SIG_ERR) {
+                perror("SIGINT signal");
+                exit(EXIT_FAILURE);
+        }
+        if (create_threadpool(NUM_THREADS)) {
+                perror("create_threadpool");
+                exit(EXIT_FAILURE);
+        } 
         for (i = 0; i < NUM_WORK_FUNCTIONS; i++) {
                 struct func_arg *a = malloc (sizeof(struct func_arg));
+
+                assert(a != NULL);
                 a->id = i;
                 a->time_to_sleep = rand() % 10;  /* random time [0..9] secs */
-                add_threadpool_work(my_important_work, (void*) a);
+                if (add_threadpool_work(my_important_work, (void*) a)) {
+                        perror("add_threadpool_word");
+                        exit(EXIT_FAILURE);  
+                }
                 printf("Work #%d enqueued\n", i);
         }
         while(1);  /* spin lock to keep main alive and show threads working */
